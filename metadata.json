@@ -1,0 +1,9 @@
+{
+  "name": "Mobile Meeting App",
+  "description": "A sophisticated field operation management and meeting application featuring real-time video transmission, intelligent network optimization, GPS tracking, and push-to-talk intercom capabilities.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
