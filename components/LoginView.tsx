@@ -6,136 +6,142 @@ interface LoginViewProps {
   onAdvancedSettings: () => void;
 }
 
-const nodes = ['省厅', '德宏', '保山', '临沧', '怒江', '版纳', '普洱', '其他'];
+const nodes = ['北京', '上海', '广州', '深圳', '成都', '杭州', '武汉', '西安'];
 
 const LoginView: React.FC<LoginViewProps> = ({ onLogin, onAdvancedSettings }) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedNode, setSelectedNode] = useState('节点选择');
+  const [selectedNode, setSelectedNode] = useState('北京');
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
-    <div className="flex-1 flex flex-col items-center pt-24 px-8 relative">
-      <button 
-        onClick={onAdvancedSettings}
-        className="absolute top-14 left-6 p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors z-20 glass"
-      >
-        <span className="material-symbols-outlined text-[24px]">settings</span>
-      </button>
+    <div className="flex-1 flex flex-col h-full bg-[#0a101f] relative overflow-hidden font-sans">
+      {/* Background Radial Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140%] h-[45%] bg-blue-600/15 rounded-[100%] blur-[100px] pointer-events-none z-0"></div>
 
-      {/* Decorative Orbs */}
-      <div className="absolute top-20 right-0 w-80 h-80 bg-blue-600 rounded-full filter blur-[100px] opacity-20 pointer-events-none"></div>
-      <div className="absolute bottom-20 left-0 w-64 h-64 bg-indigo-600 rounded-full filter blur-[80px] opacity-20 pointer-events-none"></div>
-
-      <div className="mb-12 text-center mt-4 z-10">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md mb-4 ring-1 ring-white/20 shadow-lg shadow-blue-900/20">
-          <span className="material-symbols-outlined text-3xl text-primary">video_camera_front</span>
-        </div>
-        <h1 className="text-2xl font-bold text-white tracking-wide">账号登录</h1>
-        <p className="text-sm text-gray-400 mt-2">Mobile Meeting App</p>
+      {/* Top Controls */}
+      <div className="relative z-20 pt-14 px-6">
+        <button 
+          onClick={onAdvancedSettings}
+          className="p-2 text-white/60 hover:text-white transition-colors"
+        >
+          <span className="material-symbols-outlined text-[26px]">settings</span>
+        </button>
       </div>
 
-      <div className="w-full space-y-6 z-10 flex-1">
-        {/* Network Input */}
-        <div className="group relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span className="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors text-[20px]">language</span>
+      <div className="flex-1 flex flex-col items-center px-10 relative z-10">
+        {/* Logo Section */}
+        <div className="mt-8 mb-10 text-center flex flex-col items-center">
+          <div className="w-20 h-20 rounded-2xl bg-white/5 backdrop-blur-md flex items-center justify-center mb-6 ring-1 ring-white/10 shadow-2xl">
+            <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <span className="material-symbols-outlined text-3xl text-white">videocam</span>
+            </div>
           </div>
-          <input 
-            className="block w-full pl-10 pr-3 py-3 border-b border-white/10 bg-transparent text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-0 transition-colors sm:text-sm" 
-            placeholder="接入网络" 
-            type="text" 
-            defaultValue="互联网" 
-          />
+          <h1 className="text-2xl font-bold text-white tracking-[4px]">账号登录</h1>
+          <p className="text-[11px] text-white/40 mt-2 uppercase tracking-[2px] font-medium">Mobile Meeting App</p>
         </div>
 
-        {/* Node Selection */}
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span className="material-symbols-outlined text-gray-400 text-[20px]">hub</span>
-          </div>
-          <button 
-            onClick={() => setShowDropdown(!showDropdown)}
-            className={`w-full text-left pl-10 pr-3 py-3 border-b transition-colors sm:text-sm flex justify-between items-center ${showDropdown ? 'border-primary' : 'border-white/10'}`}
-          >
-            <span className={selectedNode === '节点选择' ? 'text-gray-500' : 'text-white'}>{selectedNode}</span>
-            <span className={`material-symbols-outlined text-sm transition-transform duration-200 ${showDropdown ? 'rotate-180 text-primary' : 'text-gray-500'}`}>expand_more</span>
-          </button>
+        {/* Form Section */}
+        <div className="w-full space-y-5">
+          {/* Node Selection */}
+          <div className="relative border-b border-white/10 pb-2 mb-4">
+            <button 
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="w-full flex items-center justify-between text-white/80 hover:text-white transition-colors py-1"
+            >
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined text-white/60 text-[22px]">hub</span>
+                <span className="text-sm font-medium tracking-wide">节点选择</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-white/40">{selectedNode}</span>
+                <span className={`material-symbols-outlined text-white/40 text-lg transition-transform duration-300 ${showDropdown ? 'rotate-180' : ''}`}>expand_more</span>
+              </div>
+            </button>
 
-          {showDropdown && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setShowDropdown(false)}></div>
-              <div className="absolute z-50 left-0 right-0 mt-2 bg-[#0f172a]/95 border border-white/5 rounded-xl shadow-[0_30px_60px_-12px_rgba(0,0,0,0.8)] backdrop-blur-2xl overflow-hidden ring-1 ring-white/5">
-                <div className="py-1 max-h-60 overflow-y-auto no-scrollbar">
+            {showDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#1a2235] border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50">
+                <div className="max-h-48 overflow-y-auto no-scrollbar py-1">
                   {nodes.map(node => (
                     <button
                       key={node}
                       onClick={() => { setSelectedNode(node); setShowDropdown(false); }}
-                      className="w-full text-left block px-4 py-3 text-sm text-gray-300 hover:bg-primary/20 hover:text-white transition-colors border-l-2 border-transparent hover:border-primary"
+                      className={`w-full text-left px-5 py-3 text-xs transition-colors flex items-center justify-between group ${selectedNode === node ? 'text-blue-400 bg-blue-500/5' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
                     >
-                      {node}
+                      <span>{node}</span>
+                      {selectedNode === node && <span className="material-symbols-outlined text-sm">check</span>}
                     </button>
                   ))}
                 </div>
               </div>
-            </>
-          )}
-        </div>
-
-        {/* User Account */}
-        <div className="group relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span className="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors text-[20px]">person</span>
+            )}
           </div>
-          <input 
-            className="block w-full pl-10 pr-3 py-3 border-b border-white/10 bg-transparent text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-0 transition-colors sm:text-sm" 
-            placeholder="用户账号" 
-            type="text" 
-          />
-        </div>
 
-        {/* User Name */}
-        <div className="group relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span className="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors text-[20px]">badge</span>
+          {/* User Account */}
+          <div className="group bg-[#111827]/40 border border-white/5 rounded-sm overflow-hidden focus-within:border-primary/40 transition-all">
+            <div className="relative flex items-center">
+              <div className="pl-4 pr-3 flex items-center pointer-events-none">
+                <span className="material-symbols-outlined text-white/40 group-focus-within:text-primary transition-colors text-[20px]">person</span>
+              </div>
+              <input 
+                className="block w-full py-4 bg-transparent text-sm text-white placeholder-white/20 focus:outline-none" 
+                placeholder="用户账号" 
+                type="text" 
+              />
+            </div>
           </div>
-          <input 
-            className="block w-full pl-10 pr-3 py-3 border-b border-white/10 bg-transparent text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-0 transition-colors sm:text-sm" 
-            placeholder="用户姓名" 
-            type="text" 
-          />
-        </div>
 
-        {/* Password */}
-        <div className="group relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span className="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors text-[20px]">lock</span>
+          {/* User Name */}
+          <div className="group bg-[#111827]/40 border border-white/5 rounded-sm overflow-hidden focus-within:border-primary/40 transition-all">
+            <div className="relative flex items-center">
+              <div className="pl-4 pr-3 flex items-center pointer-events-none">
+                <span className="material-symbols-outlined text-white/40 group-focus-within:text-primary transition-colors text-[20px]">badge</span>
+              </div>
+              <input 
+                className="block w-full py-4 bg-transparent text-sm text-white placeholder-white/20 focus:outline-none" 
+                placeholder="用户姓名" 
+                type="text" 
+              />
+            </div>
           </div>
-          <input 
-            className="block w-full pl-10 pr-10 py-3 border-b border-white/10 bg-transparent text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-0 transition-colors sm:text-sm" 
-            placeholder="用户密码" 
-            type={passwordVisible ? "text" : "password"} 
-          />
-          <button 
-            type="button"
-            onClick={() => setPasswordVisible(!passwordVisible)}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-white transition-colors"
-          >
-            <span className="material-symbols-outlined text-[20px]">{passwordVisible ? 'visibility' : 'visibility_off'}</span>
-          </button>
-        </div>
 
-        <button 
-          onClick={onLogin}
-          className="w-full mt-8 bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98] text-base tracking-wide flex items-center justify-center space-x-2 border border-blue-400/20 glass"
-        >
-          <span>登录</span>
-          <span className="material-symbols-outlined text-sm">arrow_forward</span>
-        </button>
+          {/* User Password */}
+          <div className="group bg-[#111827]/40 border border-white/5 rounded-sm overflow-hidden focus-within:border-primary/40 transition-all">
+            <div className="relative flex items-center">
+              <div className="pl-4 pr-3 flex items-center pointer-events-none">
+                <span className="material-symbols-outlined text-white/40 group-focus-within:text-primary transition-colors text-[20px]">lock</span>
+              </div>
+              <input 
+                className="block w-full pr-10 py-4 bg-transparent text-sm text-white placeholder-white/20 focus:outline-none" 
+                placeholder="用户密码" 
+                type={passwordVisible ? "text" : "password"} 
+              />
+              <button 
+                type="button"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+                className="absolute inset-y-0 right-3 flex items-center text-white/30 hover:text-white transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">{passwordVisible ? 'visibility' : 'visibility_off'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Login Button */}
+          <div className="pt-6">
+            <button 
+              onClick={onLogin}
+              className="w-full bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-xl shadow-[0_8px_20px_-5px_rgba(59,130,246,0.5)] transition-all active:scale-[0.98] text-base tracking-[2px] flex items-center justify-center space-x-2"
+            >
+              <span>登录</span>
+              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="mt-auto py-8 text-center opacity-40">
-        <p className="text-[10px] tracking-wider font-mono">v 8.18.25361 (Build:220819) Cloud-YNGA</p>
-        <div className="w-32 h-1 bg-gray-700 mx-auto mt-4 rounded-full"></div>
+      {/* Footer */}
+      <div className="pb-10 pt-4 text-center opacity-30 relative z-10">
+        <p className="text-[10px] tracking-[1px] font-mono">v 8.18.25361 (Build:220819) Cloud-YNGA</p>
+        <div className="w-24 h-1 bg-white/10 mx-auto mt-4 rounded-full"></div>
       </div>
     </div>
   );

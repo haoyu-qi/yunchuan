@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { UserState, NetworkConfig, AppView } from '../types';
 import BottomNav from './BottomNav';
 
@@ -14,6 +14,14 @@ interface SettingsViewProps {
 }
 
 const SettingsView: React.FC<SettingsViewProps> = ({ onLogout, network, setNetwork, currentTab, setTab }) => {
+  const [videoQuality, setVideoQuality] = useState<'1080P' | '720P'>('1080P');
+  const [noiseReduction, setNoiseReduction] = useState(true);
+  const [pttEnabled, setPttEnabled] = useState(true);
+
+  const toggleVideoQuality = () => {
+    setVideoQuality(prev => prev === '1080P' ? '720P' : '1080P');
+  };
+
   return (
     <div className="flex-1 flex flex-col h-full bg-slate-bg overflow-hidden relative">
       <header className="pt-14 pb-4 px-5 flex justify-center items-center z-10 glass border-b border-white/5">
@@ -26,7 +34,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onLogout, network, setNetwo
           <h2 className="text-xs font-bold text-primary uppercase tracking-wider ml-1 flex items-center gap-2">
             <span className="material-icons text-sm">dns</span> 网络设置
           </h2>
-          <div className="bg-white/5 rounded-2xl p-5 border border-white/10 shadow-lg glass">
+          <div className="bg-[#111827]/60 rounded-2xl p-5 border border-white/10 shadow-lg glass">
             <div className="flex flex-col gap-6">
               <div className="flex items-start justify-between">
                 <div className="flex flex-col gap-1">
@@ -34,10 +42,6 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onLogout, network, setNetwo
                   <span className="text-xs text-white/50">选择最适合当前网络的协议</span>
                 </div>
                 <div className="flex flex-col items-end gap-1.5">
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/30 transition-all border border-primary/20 text-primary">
-                    <span className="material-icons text-sm animate-spin-slow">sync</span>
-                    <span className="text-xs font-bold">重新检测</span>
-                  </button>
                   <div className="flex items-center gap-1.5 bg-black/20 px-2 py-0.5 rounded border border-white/5">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse"></span>
                     <span className="text-xs font-mono text-green-400">延迟: {network.latency}ms</span>
@@ -48,7 +52,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onLogout, network, setNetwo
               <div className="grid grid-cols-2 gap-2 bg-black/40 p-1.5 rounded-xl border border-white/5">
                 <button 
                   onClick={() => setNetwork(prev => ({ ...prev, protocol: 'TCP' }))}
-                  className={`relative py-3 rounded-lg text-sm font-medium transition-all ${network.protocol === 'TCP' ? 'bg-white/15 text-white shadow-lg ring-1 ring-white/10' : 'text-white/40 hover:text-white/70'}`}
+                  className={`relative py-3 rounded-lg text-sm font-bold transition-all ${network.protocol === 'TCP' ? 'bg-white/15 text-white shadow-lg ring-1 ring-white/10' : 'text-white/40 hover:text-white/70'}`}
                 >
                   TCP (稳定)
                 </button>
@@ -57,12 +61,6 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onLogout, network, setNetwo
                   className={`relative py-3 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${network.protocol === 'UDP' ? 'bg-white/15 text-white shadow-lg ring-1 ring-white/10' : 'text-white/40 hover:text-white/70'}`}
                 >
                   UDP (极速)
-                  {network.protocol === 'UDP' && (
-                    <div className="absolute -top-3 -right-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full shadow-lg flex items-center gap-0.5 z-20 animate-bounce">
-                      <span className="material-icons text-[10px]">thumb_up</span>
-                      <span className="font-bold">推荐</span>
-                    </div>
-                  )}
                 </button>
               </div>
 
@@ -80,24 +78,47 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onLogout, network, setNetwo
             <span className="material-icons text-sm">tune</span> 更多设置
           </h2>
           <div className="bg-white/5 rounded-2xl border border-white/5 glass divide-y divide-white/5">
-            <button className="w-full p-4 flex items-center justify-between group">
+            <button 
+              onClick={toggleVideoQuality}
+              className="w-full p-4 flex items-center justify-between group active:bg-white/5 transition-colors"
+            >
               <span className="text-sm font-medium text-white/90">视频画质</span>
               <div className="flex items-center gap-2 text-white/50 group-hover:text-white/70 transition-colors">
-                <span className="text-xs">超清 1080P</span>
+                <span className="text-xs">{videoQuality === '1080P' ? '超清 1080P' : '高清 720P'}</span>
                 <span className="material-icons text-base">chevron_right</span>
               </div>
             </button>
-            <button className="w-full p-4 flex items-center justify-between group">
-              <span className="text-sm font-medium text-white/90">智能降噪</span>
-              <div className="flex items-center gap-2 text-white/50 group-hover:text-white/70 transition-colors">
-                <span className="text-xs">AI 增强 (开)</span>
-                <span className="material-icons text-base">chevron_right</span>
-              </div>
-            </button>
+            
             <div className="p-4 flex items-center justify-between">
-              <span className="text-sm font-medium text-white/90">PPT按键</span>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-white/90">智能降噪</span>
+                <span className="text-[10px] text-white/40">AI 语音增强技术</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`text-xs font-bold transition-colors ${noiseReduction ? 'text-primary' : 'text-white/30'}`}>
+                  {noiseReduction ? '已开启' : '已关闭'}
+                </span>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only peer" 
+                    checked={noiseReduction}
+                    onChange={() => setNoiseReduction(!noiseReduction)}
+                  />
+                  <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary shadow-inner"></div>
+                </label>
+              </div>
+            </div>
+
+            <div className="p-4 flex items-center justify-between">
+              <span className="text-sm font-medium text-white/90">PTT按键</span>
               <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
+                <input 
+                  type="checkbox" 
+                  className="sr-only peer" 
+                  checked={pttEnabled}
+                  onChange={() => setPttEnabled(!pttEnabled)}
+                />
                 <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary shadow-inner"></div>
               </label>
             </div>
